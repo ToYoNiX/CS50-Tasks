@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add
+{% endblock %}
+
+{% block main %}
+    <form action="/add" method="post">
+        <input type="hidden" name="task-id" value="{{ id }}">
+        <div class="mb-3">
+            <input type="text" autofocus autocomplete="off" class="form-control mx-auto w-auto" placeholder="Task name" name="task-name" value="{{ name }}">
+        </div>
+
+        <div class="mb-3">
+            <input type="text" autocomplete="off" class="form-control mx-auto w-auto" placeholder="Task description" name="task-description" value="{{ description }}">
+        </div>
+
+        <div class="mb-3">
+            Priority:
+            <select name="priority">
+                <option value="1" {% if priority == 1 %}selected{% endif %}>High</option>
+                <option value="0" {% if priority == 0 %}selected{% endif %}>Normal</option>
+                <option value="-1" {% if priority == -1 %}selected{% endif %}>Low</option>
+            </select>
+        </div>
+
+        <div class="mb-3 d-flex justify-content-center align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="recurring" name="recurring" {{ recurring }}>
+                <label class="form-check-label" for="recurring">
+                    Recurring
+                </label>
+            </div>
+        </div>
+
+        <div class="mb-3" id="date-container">
+            <input type="date" value="{{ due_date }}" name="date"/>
+        </div>
+
+        <button type="submit" class="btn btn-success">{{ action }}</button>
+
+        <script>
+            // Handle recurring checkbox
+
+            function dateRecurring (date) {
+                date.innerHTML = `
+                    <div class="mb-3">
+                        From:<input type="date" value="{{ start_date }}" name="start-date"/>
+                        To:<input type="date" value="{{ end_date }}" name="end-date"/>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-center align-items-center">
+                        {% for number in days %}
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" name="{{ days[number] }}" {{ days_checked[number] }}>
+                                <label class="form-check-label" for="custom-date">
+                                    {{ days[number] }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                `;
+            }
+
+            function dateNotRecurring (date) {
+                date.innerHTML = `<input type="date" value="{{ due_date }}" name="date"/>`
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                let recurring = document.querySelector('#recurring');
+                let date = document.querySelector('#date-container');
+                if (recurring.checked) {
+                    dateRecurring(date);
+                } else {
+                    dateNotRecurring(date);
+                }
+
+                recurring.addEventListener('change', function() {
+                    if (this.checked) {
+                        dateRecurring(date);
+                    } else {
+                        dateNotRecurring(date);
+                    }
+                })
+            });
+        </script>
+    </form>
+{% endblock %}

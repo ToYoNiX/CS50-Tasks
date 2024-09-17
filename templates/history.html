@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}
+    <form action="/history" method="post">
+        <div class="mb-3" id="date-container"></div>
+            <input type="date" value="{{ day }}" name="date"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Get tasks</button>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-start">Name</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-end">Done</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td class="text-start">
+                        {{ task["name"] }}
+                    </td>
+                    <td class="text-start">
+                        {{ task["description"] }}
+                    </td>
+                    <td class="text-end">
+                        {{ isDone[task["done"]] }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

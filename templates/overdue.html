@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Overdue
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-start">Name</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-start">Priority</th>
+                <th scope="col" class="text-start">Date</th>
+                <th>
+                    <form action="/overdue" method="post">
+                        Sort by:
+                        <select name="sort" onChange="this.form.submit()">
+                            <option value="0" {% if sort == '0' %}selected{% endif %}>Date</option>
+                            <option value="1" {% if sort == '1' %}selected{% endif %}>Priority</option>
+                        </select>
+                    </form>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <form action="/overdue" method="post">
+                    <input type="hidden" name="task-id" value="{{ task["id"] }}">
+                    <tr>
+                        <td class="text-start">
+                            {{ task["name"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["description"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ priorities[task["priority"]] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["due_date"] }}
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-warning">Add</button>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

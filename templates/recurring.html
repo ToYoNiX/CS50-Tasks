@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Recurring
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-start">Name</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-start">Priority</th>
+                <th scope="col" class="text-start">Start Date</th>
+                <th scope="col" class="text-start">End Date</th>
+                <th scope="col" class="text-start">Days</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <form action="/recurring" method="post">
+                    <input type="hidden" name="task-id" value="{{ task["id"] }}">
+                    <tr>
+                        <td class="text-start">
+                            {{ task["name"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["description"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ priorities[task["priority"]] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["start_date"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["end_date"] }}
+                        </td>
+                        <td class="text-start">
+                            {% set days = task.recurrence_days.split(',') %}
+                            {% for day in days %}
+                                {{ days_of_the_week[day | int] }}
+                                {% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td class="text-center">
+                            <form action="/today" method="post" style="display:inline;">
+                                <input type="hidden" name="task-id" value="{{ task["id"] }}">
+                                <button type="submit" class="btn btn-danger" name="delete-task" value="delete-task">Delete</button>
+                                <button type="submit" class="btn btn-warning" name="edit-task" value="edit-task">Edit</button>
+                            </form>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

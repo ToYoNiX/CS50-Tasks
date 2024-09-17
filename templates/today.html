@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Today
+{% endblock %}
+
+{% block main %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-start">Name</th>
+                <th scope="col" class="text-start">Description</th>
+                <th scope="col" class="text-start">Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+                <form action="/today" method="post">
+                    <input type="hidden" name="task-id" value="{{ task["id"] }}">
+                    <tr>
+                        <td class="text-start">
+                            {{ task["name"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ task["description"] }}
+                        </td>
+                        <td class="text-start">
+                            {{ priorities[task["priority"]] }}
+                        </td>
+                        <td>
+                            <input class="form-check-input" type="checkbox" {{ isChecked[task["done"]] }} onChange="this.form.submit()">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-danger" name="delete-task" value="delete-task">Delete</button>
+                            <button type="submit" class="btn btn-warning" name="edit-task" value="edit-task">Edit</button>
+                        </td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
